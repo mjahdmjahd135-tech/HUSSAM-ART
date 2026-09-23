@@ -1,0 +1,1567 @@
+عذراً على اللبس يا حسام! بناءً على طلبك، قمت بضبط إعدادات الشبكة (Grid) في الكود بحيث تظهر الصور بشكل منسق وعصري على الهواتف الذكية (بعرض سلس ومناسب للشاشات الصغيرة) دون أن يتأثر أبداً الشكل المخصص لأجهزة الحاسوب أو أي جزء آخر من الموقع.
+
+إليك الكود المحدث والجاهز بالكامل:
+
+```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUSSAM ART - أرقى كوش الأعراس والمناسبات الملكية</title>
+    <!-- مكتبة الأيقونات FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gold: #d4af37;
+            --dark-gold: #b38f28;
+            --bg-dark: #0f0f0f;
+            --bg-light: #161616;
+            --card-bg: #1e1e1e;
+            --text-color: #f1f1f1;
+            --border-color: #333;
+            --header-gradient: linear-gradient(135deg, rgba(15,15,15,0.95), rgba(30,30,30,0.85));
+        }
+
+        [data-theme="light"] {
+            --bg-dark: #fbf9f5;
+            --bg-light: #f5f2eb;
+            --card-bg: #ffffff;
+            --text-color: #2b2b2b;
+            --border-color: #e6dfcc;
+            --header-gradient: linear-gradient(135deg, rgba(20,20,20,0.9), rgba(40,40,40,0.8));
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* حاوية الأزرار العلوية اليمنى (القائمة وتسجيل الدخول) */
+        .top-right-controls {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            z-index: 1100;
+        }
+
+        .menu-toggle {
+            background: var(--primary-gold);
+            color: #121212;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-btn-top {
+            background: var(--card-bg);
+            color: var(--primary-gold);
+            border: 2px solid var(--primary-gold);
+            padding: 0 12px;
+            height: 42px;
+            border-radius: 21px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+
+        .login-btn-top:hover {
+            background: var(--primary-gold);
+            color: #121212;
+        }
+
+        /* حاوية الأزرار العلوية اليسرى */
+        .top-left-controls {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            z-index: 1100;
+        }
+
+        .top-left-btn {
+            background: var(--card-bg);
+            color: var(--primary-gold);
+            border: 1px solid var(--primary-gold);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .top-left-btn:hover {
+            background: var(--primary-gold);
+            color: #121212;
+            transform: scale(1.08);
+        }
+
+        /* القائمة الجانبية (Sidebar) */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 280px;
+            height: 100%;
+            background: var(--card-bg);
+            box-shadow: -5px 0 25px rgba(0,0,0,0.5);
+            z-index: 1200;
+            transition: right 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 20px;
+            border-left: 2px solid var(--primary-gold);
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            right: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .sidebar-header h2 {
+            color: var(--primary-gold);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .sidebar-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-links a, .sidebar-links button {
+            background: none;
+            border: none;
+            text-align: right;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            text-decoration: none;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .sidebar-links a:hover, .sidebar-links button:hover {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--primary-gold);
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1150;
+            display: none;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* لوحة التحكم الخاصة بك */
+        .admin-panel {
+            background: rgba(212, 175, 55, 0.08);
+            border: 2px solid var(--primary-gold);
+            padding: 20px 15px;
+            border-radius: 16px;
+            margin: 30px auto;
+            max-width: 1200px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .admin-panel h3 {
+            color: var(--primary-gold);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-upload-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-direction: column;
+        }
+
+        .admin-upload-box input, .admin-upload-box select {
+            padding: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        .upload-btn-custom {
+            background: var(--primary-gold);
+            color: #121212;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            text-align: center;
+        }
+        .upload-btn-custom:hover { opacity: 0.9; }
+
+        .admin-log-list {
+            max-height: 180px;
+            overflow-y: auto;
+            background: var(--card-bg);
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .admin-log-item {
+            padding: 8px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .ban-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        /* الهيدر الفاخر */
+        header {
+            background: var(--header-gradient), url('1.jpg') center/cover no-repeat;
+            color: #fff;
+            padding: 80px 15px 60px 15px;
+            text-align: center;
+            border-bottom: 5px solid var(--primary-gold);
+            position: relative;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        }
+
+        .badge-top {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--primary-gold);
+            border: 1px solid var(--primary-gold);
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            color: var(--primary-gold);
+            letter-spacing: 2px;
+            font-weight: 800;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            word-break: break-word;
+        }
+
+        header p {
+            font-size: 1rem;
+            color: #dedede;
+            max-width: 850px;
+            margin: 0 auto 25px auto;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .header-btn {
+            display: inline-block;
+            background: var(--primary-gold);
+            color: #121212;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            text-decoration: none;
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .header-btn:hover {
+            background: #fff;
+            color: #000;
+            transform: translateY(-3px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 0 10px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+            padding: 0 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--primary-gold);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* كرت الخدمات الخاصة بالكوش */
+        .services-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        @media (min-width: 768px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            header h1 {
+                font-size: 3.2rem;
+            }
+            .admin-upload-box {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .admin-upload-box input, .admin-upload-box select, .upload-btn-custom {
+                width: auto;
+                flex: 1;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .services-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            padding: 25px 20px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-gold);
+            box-shadow: 0 12px 30px rgba(212, 175, 55, 0.15);
+        }
+
+        .service-card i {
+            font-size: 2.5rem;
+            color: var(--primary-gold);
+            margin-bottom: 15px;
+        }
+
+        .service-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .service-card p {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        /* أزرار الفلترة */
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .filter-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--primary-gold);
+            color: var(--text-color);
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--primary-gold);
+            color: #121212;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        /* معرض الصور - تم تعديله هنا ليعمل كـ Grid بعمودين على الهاتف بدلاً من خط مستقيم */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .gallery {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 25px;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            transition: all 0.35s ease;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            border-color: var(--primary-gold);
+        }
+
+        .card-img-wrapper {
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            height: 180px;
+        }
+
+        @media (min-width: 768px) {
+            .card-img-wrapper {
+                height: 330px;
+            }
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .card-img-wrapper:hover img {
+            transform: scale(1.08);
+        }
+
+        .delete-img-btn {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            background: rgba(255, 71, 87, 0.85);
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            z-index: 10;
+            font-weight: bold;
+        }
+        .delete-img-btn:hover { background: #ff4757; }
+
+        .card-actions {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .action-icon-btn {
+            background: rgba(18, 18, 18, 0.75);
+            backdrop-filter: blur(5px);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .action-icon-btn:hover {
+            background: var(--primary-gold);
+            color: #121212;
+            transform: scale(1.15);
+            border-color: var(--primary-gold);
+        }
+
+        .action-icon-btn.liked {
+            color: #ff4757;
+            background: rgba(255, 71, 87, 0.2);
+            border-color: #ff4757;
+        }
+
+        /* تصميم القلوب المتطايرة مثل تيك توك وفيس بوك */
+        @keyframes floatUpHeartTikTok {
+            0% { transform: translateY(0) scale(0.6) rotate(0deg); opacity: 1; }
+            50% { transform: translateY(-60px) scale(1.4) rotate(-15deg); opacity: 1; }
+            100% { transform: translateY(-130px) scale(1) rotate(15deg); opacity: 0; }
+        }
+        .floating-heart {
+            position: absolute;
+            color: #ff2347;
+            font-size: 1.4rem;
+            text-shadow: 0 0 10px rgba(255, 35, 71, 0.8);
+            pointer-events: none;
+            animation: floatUpHeartTikTok 0.9s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+            z-index: 50;
+        }
+
+        .card-body {
+            padding: 12px;
+            background: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card-title-tag {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-booking {
+            display: inline-block;
+            background-color: #25d366;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            padding: 8px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-booking:hover {
+            background-color: #1eb857;
+            transform: translateY(-2px);
+        }
+
+        /* تعليقات */
+        .comments-section {
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+            margin-top: 3px;
+        }
+
+        .comments-list {
+            max-height: 100px;
+            overflow-y: auto;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .comment-item {
+            background: rgba(255,255,255,0.03);
+            padding: 6px 8px;
+            border-radius: 6px;
+            border-right: 3px solid var(--primary-gold);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 0.75rem;
+            color: var(--primary-gold);
+            margin-bottom: 2px;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 5px;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 6px 10px;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-dark);
+            color: var(--text-color);
+            font-size: 0.8rem;
+        }
+
+        .comment-submit {
+            background: var(--primary-gold);
+            border: none;
+            color: #121212;
+            padding: 6px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        /* نافذة العرض المكبر */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.96);
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .lightbox-img {
+            max-width: 95%;
+            max-height: 80vh;
+            border-radius: 12px;
+            object-fit: contain;
+            box-shadow: 0 0 50px rgba(212,175,55,0.3);
+        }
+
+        .lightbox-close, .lightbox-prev, .lightbox-next {
+            position: absolute;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            user-select: none;
+            background: rgba(255,255,255,0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-close { top: 15px; right: 15px; }
+        .lightbox-prev { right: 15px; top: 50%; transform: translateY(-50%); }
+        .lightbox-next { left: 15px; top: 50%; transform: translateY(-50%); }
+
+        @media (min-width: 768px) {
+            .lightbox-close, .lightbox-prev, .lightbox-next {
+                font-size: 30px;
+                width: 50px;
+                height: 50px;
+            }
+            .lightbox-close { top: 25px; right: 30px; }
+            .lightbox-prev { right: 30px; }
+            .lightbox-next { left: 30px; }
+        }
+
+        /* الزر العائم لسماعة خدمة العملاء وقائمة الأرقام */
+        .service-float-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .service-float-btn {
+            width: 55px;
+            height: 55px;
+            background-color: #25d366;
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 24px;
+            box-shadow: 0 5px 25px rgba(37,211,102,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.3s ease;
+        }
+
+        .service-float-btn:hover {
+            transform: scale(1.12);
+        }
+
+        .service-popup-menu {
+            display: none;
+            position: absolute;
+            bottom: 70px;
+            left: 0;
+            background: var(--card-bg);
+            border: 2px solid var(--primary-gold);
+            border-radius: 16px;
+            padding: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 260px;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 1001;
+        }
+
+        .service-popup-menu.active {
+            display: flex;
+        }
+
+        .service-number-item {
+            background: rgba(212,175,55,0.08);
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-color);
+            display: block;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .service-number-item:hover {
+            border-color: var(--primary-gold);
+            background: rgba(212,175,55,0.15);
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px 15px;
+            background: #0a0a0a;
+            color: #888;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <!-- الأزرار العلوية اليمنى -->
+    <div class="top-right-controls">
+        <button class="login-btn-top" onclick="alert('نافذة تسجيل الدخول للمتصفحين')"><i class="fas fa-user"></i> دخول</button>
+        <button class="menu-toggle" onclick="toggleSidebar()" title="القائمة">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- الأزرار العلوية اليسرى -->
+    <div class="top-left-controls">
+        <a href="#" class="top-left-btn" onclick="resetToHomeAndAll(event)" title="الرئيسية"><i class="fas fa-home"></i></a>
+        <button class="top-left-btn" onclick="requestNotificationPermission()" title="تفعيل إشعارات النشر"><i class="fas fa-bell"></i></button>
+        <button class="top-left-btn" onclick="toggleTheme()" title="تبديل الوضع"><i class="fas fa-sun" id="theme-icon"></i></button>
+    </div>
+
+    <!-- القائمة الجانبية -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>HUSSAM ART</h2>
+            <button class="sidebar-close" onclick="toggleSidebar()">&times;</button>
+        </div>
+        <ul class="sidebar-links">
+            <li><a href="#gallery" onclick="closeSidebarAndGo('#gallery')"><i class="fas fa-crown"></i> معرض الكوش الملكية</a></li>
+            <li><a href="#" onclick="openLikedImagesModal(); toggleSidebar();"><i class="fas fa-heart" style="color:#ff4757;"></i> الصور المعجب بها ومن تفاعل</a></li>
+            <li><a href="#" onclick="openArchivePage(); toggleSidebar();"><i class="fas fa-images"></i> أرشيف أعمالنا</a></li>
+            <li><a href="#" onclick="alert('نافذة تسجيل الدخول (قريباً)'); toggleSidebar();"><i class="fas fa-user-shield"></i> لوحة الإدارة</a></li>
+        </ul>
+    </div>
+
+    <!-- الزر العائم لسماعة خدمة العملاء وقائمة الأرقام الثلاثة -->
+    <div class="service-float-container" id="service-float-container">
+        <div class="service-popup-menu" id="service-popup">
+            <div style="font-size:0.8rem; color:var(--primary-gold); margin-bottom:5px; text-align:center; font-weight:bold;">اختر رقم التواصل والمتابعة</div>
+            <!-- الرقم الأول: واتس واتصال (يخير المستخدم) -->
+            <a href="#" class="service-number-item" onclick="promptContactChoice('+963939902453'); return false;">
+                +963 939 902 453 <span style="display:block; font-size:0.7rem; color:#888;">واتس واتصال</span>
+            </a>
+            <!-- الرقم الثاني: اتصال فقط -->
+            <a href="tel:+963959160795" class="service-number-item">
+                +963 959 160 795 <span style="display:block; font-size:0.7rem; color:#888;">اتصال</span>
+            </a>
+            <!-- الرقم الثالث: واتس فقط -->
+            <a href="https://wa.me/212704181859" class="service-number-item" target="_blank">
+                +212 704 181 859 <span style="display:block; font-size:0.7rem; color:#888;">واتس</span>
+            </a>
+        </div>
+        <button class="service-float-btn" onclick="toggleServicePopup(event)" title="تلبية طلبات العملاء">
+            <i class="fas fa-headset"></i>
+        </button>
+    </div>
+
+    <!-- الهيدر الفاخر -->
+    <header>
+        <span class="badge-top"><i class="fas fa-gem"></i> الفخامة تبدأ من هنا</span>
+        <h1>HUSSAM ART</h1>
+        <p>الوجهة الأولى لتأجير أرقى كوش الأعراس، تصاميم ملكية فريدة، ديكورات ساحرة، وتنسيق موائد طعام تليق بأهم لحظات العمر</p>
+        <a href="#gallery" class="header-btn"><i class="fas fa-eye"></i> استعرض تصاميم الكوش الملكية</a>
+    </header>
+
+    <div class="container">
+        <!-- لوحة التحكم الخاصة بك -->
+        <div class="admin-panel" id="admin-panel">
+            <h3><i class="fas fa-shield-alt"></i> لوحة الرقابة والحماية والتحكم الخاصة بك (حسام)</h3>
+            <div class="admin-upload-box">
+                <input type="file" id="upload-file-input" accept="image/*">
+                <select id="upload-category-select">
+                    <option value="kosha">كوش الأعراس</option>
+                    <option value="tables">موائد الطعام</option>
+                    <option value="decor">الديكورات والإضاءة</option>
+                    <option value="roses">الورود</option>
+                    <option value="archive">أرشيف أعمالنا (نشر في الأرشيف)</option>
+                </select>
+                <input type="text" id="upload-name-input" placeholder="اسم الصورة">
+                <button class="upload-btn-custom" onclick="uploadNewImage()"><i class="fas fa-upload"></i> تحميل ونشر الصورة</button>
+            </div>
+            <p style="font-size: 0.85rem; margin-bottom: 10px; color: #aaa;">رصد تفاعلات المتصفحات وإدارة سلة المهملات:</p>
+            <div style="margin-bottom: 15px; display:flex; gap:10px;">
+                <button class="upload-btn-custom" onclick="openTrashModal()" style="background:#ff4757; color:#fff; width:auto;"><i class="fas fa-trash-alt"></i> سلة مهملات الصور</button>
+            </div>
+            <div class="admin-log-list" id="admin-log-list">
+                <div class="admin-log-item"><span>أهلاً بك يا حسام، نظام الحماية والخصوصية يعمل بكفاءة تامة.</span><span style="color:#888;">الآن</span></div>
+            </div>
+        </div>
+
+        <!-- قسم الخدمات المتخصصة -->
+        <h2 class="section-title">خدماتنا الملكية للأعراس والمناسبات</h2>
+        <p class="section-subtitle">نبتكر كل زاوية لتجعل ليلة عمرك ذكرى لا تُنسى</p>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <i class="fas fa-crown"></i>
+                <h3>كوش أعراس ملكية</h3>
+                <p>موديلات كلاسيكية ومودرن مصممة خصيصاً لتمنحك حضوراً ساحراً في القاعة.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-utensils"></i>
+                <h3>تجهيز موائد وبوفيهات</h3>
+                <p>تنسيق فاخر لموائد الطعام، أطقم ضيافة راقية وأطباق تليق بضيوفك الكرام.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-lightbulb"></i>
+                <h3>إضاءة ومؤثرات بصرية</h3>
+                <p>منظومات إضاءة متكاملة وممرات مضيئة تزيد القاعة رونقاً وجمالاً. لا يوجد صور تم نشرها انتظرونا قريبا ان شاء الله في احدث الاعمال لنا</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-spa"></i>
+                <h3>تنسيق الورود الفاخرة</h3>
+                <p>أرقى تنسيقات الزهور الطبيعية والصناعية لطاولات الاستقبال والسنتربيس. لا يوجد صور تم نشرها انتظرونا قريبا ان شاء الله في احدث الاعمال لنا</p>
+            </div>
+        </div>
+
+        <!-- معرض الكوش -->
+        <h2 class="section-title" id="gallery">معرض كوش الأعراس والمناسبات</h2>
+        <p class="section-subtitle">اختر تصميمك المفضل وتفاعل بحرية تامة وخصوصية مُطلقة</p>
+
+        <!-- أزرار الفلترة -->
+        <div class="filter-buttons" id="filter-buttons-container"></div>
+
+        <!-- المعرض -->
+        <div class="gallery" id="gallery-container"></div>
+    </div>
+
+    <!-- نافذة العرض المكبر (Lightbox) -->
+    <div id="lightbox" class="lightbox" onclick="closeLightboxOnBg(event)">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <span class="lightbox-prev" onclick="changeImage(1)">&#10095;</span>
+        <img id="lightbox-img" class="lightbox-img" src="" alt="صورة مكبرة">
+        <span class="lightbox-next" onclick="changeImage(-1)">&#10094;</span>
+    </div>
+
+    <!-- قسم آراء وتقييمات المتصفحات -->
+    <section style="background: var(--card-bg); padding: 40px 15px; border-top: 1px solid var(--border-color); margin-top: 50px;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 style="color: var(--primary-gold); margin-bottom: 10px; font-size: 1.6rem; text-align: center;">آراء وتقييمات المتصفحين والزائرين</h2>
+            <p style="color: #aaa; margin-bottom: 30px; text-align: center; font-size: 0.95rem;">نعتز بثقتكم ونشارككم أروع انطباعات ليلة العمر</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 30px;">
+                <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; border-right: 4px solid var(--primary-gold);">
+                    <div style="display:flex; justify-content:space-between; font-weight:bold; color:var(--primary-gold); margin-bottom:6px; font-size:0.9rem;">
+                        <span>أبو جاد (حلب)</span>
+                        <span>⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <p style="color:#ddd; font-size:0.9rem;">شغل راقي جداً وقمة في الفخامة، كوشة الأعراس كانت ساحرة وأفضل بكثير مما توقعت!</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; border-right: 4px solid var(--primary-gold);">
+                    <div style="display:flex; justify-content:space-between; font-weight:bold; color:var(--primary-gold); margin-bottom:6px; font-size:0.9rem;">
+                        <span>ريم العبدالله</span>
+                        <span>⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <p style="color:#ddd; font-size:0.9rem;">تعامل احترافي ودقة بالمواعيد، تنسيق الموائد والورود أضاف لمسة ملكية حقيقية للقاعة.</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; border-right: 4px solid var(--primary-gold);">
+                    <div style="display:flex; justify-content:space-between; font-weight:bold; color:var(--primary-gold); margin-bottom:6px; font-size:0.9rem;">
+                        <span>سامر حموي</span>
+                        <span>⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <p style="color:#ddd; font-size:0.9rem;">شكراً لحسام آرت على الإبداع الرائع، التصاميم مميزة وأسعارهم تناسب الفخامة المقدمة.</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; border-right: 4px solid var(--primary-gold);">
+                    <div style="display:flex; justify-content:space-between; font-weight:bold; color:var(--primary-gold); margin-bottom:6px; font-size:0.9rem;">
+                        <span>نور الهدى</span>
+                        <span>⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <p style="color:#ddd; font-size:0.9rem;">أجمل صالة وتصاميم كوش شاهدتها في حلب، كل التوفيق والتميّز المستمر لكم.</p>
+                </div>
+            </div>
+
+            <div style="background: var(--bg-dark); padding: 20px 15px; border-radius: 16px; border: 1px solid var(--border-color); text-align: center; max-width: 700px; margin: 0 auto;">
+                <h3 style="color: var(--primary-gold); margin-bottom: 8px; font-size: 1.15rem;">شاركنا رأيك وتقييمك للصفحة</h3>
+                <p style="color: #bbb; margin-bottom: 15px; font-size: 0.9rem;">يسعدنا جداً سماع رأيك، ونتشرف دائماً بخدمتك لتكون ليلة عمرك ذكري لا تُنسى ✨</p>
+                <form onsubmit="submitSiteReview(event)" style="display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; gap: 10px; flex-direction: column;">
+                        <input type="text" id="reviewer-name" placeholder="اسمك الكريم" required style="padding:10px; background:var(--card-bg); border:1px solid var(--border-color); color:var(--text-color); border-radius:8px; font-size:0.9rem;">
+                        <select id="reviewer-rating" style="padding:10px; background:var(--card-bg); border:1px solid var(--border-color); color:var(--text-color); border-radius:8px; font-size:0.9rem;">
+                            <option value="⭐⭐⭐⭐⭐">5 نجوم (ممتاز)</option>
+                            <option value="⭐⭐⭐⭐">4 نجوم (جيد جداً)</option>
+                            <option value="⭐⭐⭐">3 نجوم (جيد)</option>
+                        </select>
+                    </div>
+                    <textarea id="reviewer-text" placeholder="اكتب تعليقك وانطباعك عن الموقع والخدمات..." rows="3" required style="padding:10px; background:var(--card-bg); border:1px solid var(--border-color); color:var(--text-color); border-radius:8px; resize:vertical; font-size:0.9rem;"></textarea>
+                    <button type="submit" class="comment-submit" style="padding: 10px; border-radius: 8px; font-size: 0.95rem; width:100%;"><i class="fas fa-paper-plane"></i> إرسال التقييم والتعليق</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم التواصل -->
+    <section style="background: var(--card-bg); padding: 40px 15px; text-align: center; border-top: 1px solid var(--border-color);">
+        <h2 style="color: var(--primary-gold); margin-bottom: 8px; font-size: 1.6rem;">احجز موعدك الآن</h2>
+        <p style="color: #aaa; margin-bottom: 15px; font-size: 0.95rem;">📍 سوريا - حلب</p>
+        
+        <!-- المستطيلات الثلاثة القابلة للضغط بالكامل -->
+        <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 20px 0;">
+            <div onclick="promptContactChoice('+963939902453')" style="background: rgba(212,175,55,0.08); border: 2px solid var(--primary-gold); padding: 12px 15px; border-radius: 12px; width: 100%; max-width: 300px; cursor: pointer;">
+                <span style="font-size: 1.2rem; font-weight: bold; direction: ltr; color: var(--text-color); display:block;">+963 939 902 453</span>
+                <div style="color: var(--primary-gold); font-weight: bold; margin-top: 4px; font-size: 0.85rem;">واتس واتصال</div>
+            </div>
+            <div onclick="window.location.href='tel:+963959160795'" style="background: rgba(212,175,55,0.08); border: 2px solid var(--primary-gold); padding: 12px 15px; border-radius: 12px; width: 100%; max-width: 300px; cursor: pointer;">
+                <span style="font-size: 1.2rem; font-weight: bold; direction: ltr; color: var(--text-color); display:block;">+963 959 160 795</span>
+                <div style="color: var(--primary-gold); font-weight: bold; margin-top: 4px; font-size: 0.85rem;">اتصال</div>
+            </div>
+            <div onclick="window.open('https://wa.me/212704181859', '_blank')" style="background: rgba(212,175,55,0.08); border: 2px solid var(--primary-gold); padding: 12px 15px; border-radius: 12px; width: 100%; max-width: 300px; cursor: pointer;">
+                <span style="font-size: 1.2rem; font-weight: bold; direction: ltr; color: var(--text-color); display:block;">+212 704 181 859</span>
+                <div style="color: var(--primary-gold); font-weight: bold; margin-top: 4px; font-size: 0.85rem;">واتس</div>
+            </div>
+        </div>
+
+        <!-- المستطيل الأخضر المشع (تم جعله أطول وأكثر وضوحاً) -->
+        <div style="display: inline-block; background: rgba(37,211,102,0.18); border: 2px solid #25d366; padding: 16px 45px; border-radius: 40px; box-shadow: 0 0 25px rgba(37,211,102,0.5); margin-top: 15px; max-width: 95%; width: 500px;">
+            <span style="color: #25d366; font-size: 1.2rem; font-weight: bold;"><i class="fas fa-headset"></i> تواصل هاتفي مباشر وخدمة العملاء الفورية</span>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2026 جميع الحقوق محفوظة - HUSSAM ART لتأجير كوش الأعراس والمناسبات
+    </footer>
+
+    <!-- صوت إعجاب -->
+    <audio id="like-sound" src="https://cdn.freesound.org/previews/608/608618_11861866-lq.mp3" preload="auto"></audio>
+
+    <script>
+        const defaultGalleryItems = [
+            { id: 1, src: '1.jpg', category: 'kosha', name: 'HUSSAM ART' },
+            { id: 2, src: '2.jpg', category: 'kosha', name: 'HUSSAM ART' },
+            { id: 3, src: '3.jpg', category: 'kosha', name: 'HUSSAM ART' },
+            { id: 4, src: '4.jpg', category: 'kosha', name: 'HUSSAM ART' },
+            { id: 5, src: '5.jpg', category: 'kosha', name: 'HUSSAM ART' },
+            { id: 6, src: '6.jpg', category: 'kosha', name: 'HUSSAM ART' },
+            { id: 7, src: '7.jpg', category: 'decor', name: 'HUSSAM ART' },
+            { id: 8, src: '8.jpg', category: 'decor', name: 'HUSSAM ART' },
+            { id: 9, src: '9.jpg', category: 'kosha', name: 'HUSSAM ART' },
+            { id: 10, src: '10.jpg', category: 'kosha', name: 'HUSSAM ART' },
+            { id: 11, src: '11.jpg', category: 'decor', name: 'HUSSAM ART' },
+            { id: 12, src: '12.jpg', category: 'decor', name: 'HUSSAM ART' },
+            { id: 13, src: '13.jpg', category: 'kosha', name: 'HUSSAM ART' },
+            // موائد الطعام من 14 إلى 21
+            { id: 14, src: '14.jpg', category: 'tables', name: 'HUSSAM ART' },
+            { id: 15, src: '15.jpg', category: 'tables', name: 'HUSSAM ART' },
+            { id: 16, src: '16.jpg', category: 'tables', name: 'HUSSAM ART' },
+            { id: 17, src: '17.jpg', category: 'tables', name: 'HUSSAM ART' },
+            { id: 18, src: '18.jpg', category: 'tables', name: 'HUSSAM ART' },
+            { id: 19, src: '19.jpg', category: 'tables', name: 'HUSSAM ART' },
+            { id: 20, src: '20.jpg', category: 'tables', name: 'HUSSAM ART' },
+            { id: 21, src: '21.jpg', category: 'tables', name: 'HUSSAM ART' }
+        ];
+
+        let galleryItems = JSON.parse(localStorage.getItem('gallery_items') || JSON.stringify(defaultGalleryItems));
+        let archiveItems = JSON.parse(localStorage.getItem('archive_items') || '[]');
+        let trashItems = JSON.parse(localStorage.getItem('trash_items') || '[]');
+        let currentImageIndex = 0;
+
+        const galleryContainer = document.getElementById('gallery-container');
+        const filterContainer = document.getElementById('filter-buttons-container');
+
+        const categoryNames = {
+            'all': 'جميع التصاميم',
+            'kosha': 'كوش الأعراس',
+            'tables': 'موائد الطعام',
+            'decor': 'الديكورات والإضاءة',
+            'roses': 'الورود'
+        };
+
+        function getVisitorFakeId() {
+            let vid = localStorage.getItem('visitor_secret_id');
+            if (!vid) {
+                vid = 'زائر مجهول #' + Math.floor(1000 + Math.random() * 9000);
+                localStorage.setItem('visitor_secret_id', vid);
+            }
+            return vid;
+        }
+
+        function logAdminAction(text, userId = null) {
+            if (localStorage.getItem('is_banned') === 'true') return;
+            const list = document.getElementById('admin-log-list');
+            if(!list) return;
+            const timeStr = new Date().toLocaleTimeString('ar-SY');
+            const item = document.createElement('div');
+            item.className = 'admin-log-item';
+            let banButtonHtml = userId ? `<button class="ban-btn" onclick="banUser('${userId}')">حظر الزائر</button>` : '';
+            item.innerHTML = `<span>${text}</span> <div style="display:flex; gap:8px; align-items:center;">${banButtonHtml}<span style="color:#888; font-size:0.75rem;">${timeStr}</span></div>`;
+            list.prepend(item);
+        }
+
+        window.banUser = function(userId) {
+            if (confirm(`هل أنت متأكد من حظر المستخدم (${userId})؟`)) {
+                localStorage.setItem('is_banned', 'true');
+                alert(`تم حظر المستخدم (${userId}) بنجاح!`);
+                logAdminAction(`⛔ تم حظر المستخدم (${userId}).`);
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('is_banned') === 'true') {
+                document.body.innerHTML = `<div style="text-align:center; padding:120px 20px; background:#0f0f0f; color:#fff; height:100vh;"><h1 style="color:#ff4757;">عذراً، تم حظرك.</h1></div>`;
+                return;
+            }
+
+            const visitorName = getVisitorFakeId();
+            logAdminAction(`👤 (${visitorName}) تصفح الموقع.`, visitorName);
+            setupFilters();
+            renderGallery(galleryItems);
+
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.getElementById('theme-icon').className = 'fas fa-moon';
+            }
+        });
+
+        function resetToHomeAndAll(e) {
+            if(e) e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const allBtn = document.querySelector('.filter-btn');
+            if(allBtn) allBtn.click();
+            else renderGallery(galleryItems);
+        }
+
+        document.addEventListener('click', function(event) {
+            const serviceContainer = document.getElementById('service-float-container');
+            const popup = document.getElementById('service-popup');
+            if (serviceContainer && !serviceContainer.contains(event.target)) {
+                if (popup) popup.classList.remove('active');
+            }
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function closeSidebarAndGo(selector) {
+            toggleSidebar();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const icon = document.getElementById('theme-icon');
+            if (currentTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                icon.className = 'fas fa-moon';
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                icon.className = 'fas fa-sun';
+            }
+        }
+
+        function requestNotificationPermission() {
+            if (("Notification" in window)) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") alert("تم تفعيل إشعارات النشر!");
+                });
+            }
+        }
+
+        function toggleServicePopup(event) {
+            if(event) event.stopPropagation();
+            const popup = document.getElementById('service-popup');
+            popup.classList.toggle('active');
+        }
+
+        function promptContactChoice(number) {
+            const choice = confirm("اضغط 'موافق' للمحادثة عبر واتساب، أو 'إلغاء' للاتصال الهاتفي.");
+            if (choice) {
+                window.open(`https://wa.me/${number.replace(/[^0-9]/g, '')}`, '_blank');
+            } else {
+                window.location.href = `tel:${number}`;
+            }
+        }
+
+        function setupFilters() {
+            filterContainer.innerHTML = '';
+            const categories = ['all', 'kosha', 'tables', 'decor', 'roses'];
+
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = `filter-btn ${cat === 'all' ? 'active' : ''}`;
+                btn.textContent = categoryNames[cat] || cat;
+                btn.onclick = (e) => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    if (cat === 'all') {
+                        renderGallery(galleryItems);
+                    } else if (cat === 'decor' || cat === 'roses') {
+                        galleryContainer.innerHTML = `
+                            <div style="grid-column: 1 / -1; text-align: center; padding: 40px 15px; background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border-color);">
+                                <i class="fas fa-images" style="font-size: 2.5rem; color: var(--primary-gold); margin-bottom: 12px;"></i>
+                                <h3 style="color: var(--text-color); margin-bottom: 8px; font-size: 1.1rem;">لا يوجد صور تم نشرها</h3>
+                                <p style="color: #aaa; font-size: 0.9rem;">انتظرونا قريبا ان شاء الله في احدث الاعمال لنا</p>
+                            </div>
+                        `;
+                    } else {
+                        renderGallery(galleryItems.filter(i => i.category === cat));
+                    }
+                };
+                filterContainer.appendChild(btn);
+            });
+        }
+
+        function renderGallery(items) {
+            galleryContainer.innerHTML = '';
+            items.forEach((item, index) => {
+                const isLiked = localStorage.getItem(`like_${item.id}`) === 'true';
+                const comments = JSON.parse(localStorage.getItem(`comments_${item.id}`) || '[]');
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-img-wrapper">
+                        <div class="card-actions">
+                            <button class="action-icon-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike(${item.id}, this)" title="إعجاب">
+                                <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
+                            </button>
+                            <button class="action-icon-btn" onclick="shareImage('${item.src}', '${item.name}')" title="مشاركة">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                        </div>
+                        <img src="${item.src}" alt="${item.name}" onclick="openLightbox(${index})">
+                        <button class="delete-img-btn" onclick="moveToTrash(${item.id})"><i class="fas fa-trash"></i> حذف</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title-tag">
+                            <span>${item.name}</span>
+                        </div>
+                        <a href="https://wa.me/963939902453?text=السلام%20عليكم،%20أرغب%20في%20الاستفسار%20وحجز%20${item.name}" class="btn-booking" target="_blank">
+                            <i class="fab fa-whatsapp"></i> احجز هذا التصميم
+                        </a>
+                        <div class="comments-section">
+                            <div class="comments-list">
+                                ${comments.length === 0 ? '<p style="text-align:center; color:#777; font-size:0.75rem;">لا توجد تعليقات بعد بخصوصية!</p>' : ''}
+                                ${comments.map(c => `
+                                    <div class="comment-item">
+                                        <div class="comment-header"><span>${c.user}</span><span>${c.time}</span></div>
+                                        <div style="color:var(--text-color);">${c.text}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <form class="comment-form" onsubmit="addComment(event, ${item.id})">
+                                <input type="text" class="comment-input" placeholder="اكتب تعليقاً..." required>
+                                <button type="submit" class="comment-submit">إرسال</button>
+                            </form>
+                        </div>
+                    </div>
+                `;
+                galleryContainer.appendChild(card);
+            });
+        }
+
+        function toggleLike(id, btn) {
+            const sound = document.getElementById('like-sound');
+            if(sound) { 
+                sound.currentTime = 0; 
+                sound.play().catch(err => {
+                    console.log("Audio play blocked or error:", err);
+                }); 
+            }
+
+            for (let i = 0; i < 4; i++) {
+                const heart = document.createElement('i');
+                heart.className = 'fas fa-heart floating-heart';
+                heart.style.left = (Math.random() * 40 - 20) + 'px';
+                heart.style.top = (Math.random() * 10 - 5) + 'px';
+                heart.style.animationDelay = (i * 0.08) + 's';
+                btn.appendChild(heart);
+                setTimeout(() => heart.remove(), 900);
+            }
+
+            const isLiked = localStorage.getItem(`like_${id}`) === 'true';
+            const visitorName = getVisitorFakeId();
+            let likers = JSON.parse(localStorage.getItem(`likers_${id}`) || '[]');
+
+            if (isLiked) {
+                localStorage.setItem(`like_${id}`, 'false');
+                btn.classList.remove('liked');
+                btn.querySelector('i').className = 'far fa-heart';
+                likers = likers.filter(u => u !== visitorName);
+            } else {
+                localStorage.setItem(`like_${id}`, 'true');
+                btn.classList.add('liked');
+                btn.querySelector('i').className = 'fas fa-heart';
+                if (!likers.includes(visitorName)) likers.push(visitorName);
+            }
+            localStorage.setItem(`likers_${id}`, JSON.stringify(likers));
+        }
+
+        function openLikedImagesModal() {
+            let likedItems = [];
+            galleryItems.forEach(item => {
+                if (localStorage.getItem(`like_${item.id}`) === 'true') likedItems.push(item);
+            });
+
+            let likedListHtml = '';
+            likedItems.forEach((item, idx) => {
+                let likers = JSON.parse(localStorage.getItem(`likers_${item.id}`) || '[]');
+                likedListHtml += `
+                    <div style="background:var(--card-bg); padding:12px; border-radius:10px; margin-bottom:12px; border:1px solid var(--border-color); display:flex; gap:12px; align-items:center;">
+                        <img src="${item.src}" style="width:65px; height:65px; object-fit:cover; border-radius:8px; cursor:pointer;" onclick="openLikedLightbox(${idx}, ${JSON.stringify(likedItems).replace(/"/g, '&quot;')})">
+                        <div>
+                            <h4 style="color:var(--primary-gold); margin-bottom:4px; font-size:0.95rem;">${item.name}</h4>
+                            <p style="font-size:0.8rem; color:#aaa;">المعجبون: ${likers.length > 0 ? likers.join(', ') : 'أنت'}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            if (!likedListHtml) likedListHtml = '<p style="text-align:center; color:#888; font-size:0.9rem;">لم تقم بالإعجاب بأي صورة بعد.</p>';
+
+            const modal = document.createElement('div');
+            modal.id = "liked-modal-container";
+            modal.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:3000; display:flex; justify-content:center; align-items:center; padding:15px;";
+            modal.onclick = function(e) { if (e.target.id === 'liked-modal-container') modal.remove(); };
+
+            modal.innerHTML = `
+                <div style="background:var(--bg-dark); width:100%; max-width:550px; max-height:80vh; overflow-y:auto; padding:20px; border-radius:16px; border:2px solid var(--primary-gold); position:relative;" onclick="event.stopPropagation()">
+                    <button onclick="document.getElementById('liked-modal-container').remove()" style="position:absolute; top:12px; left:15px; background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer;">&times;</button>
+                    <h3 style="color:var(--primary-gold); margin-bottom:15px; text-align:center; font-size:1.1rem;"><i class="fas fa-heart"></i> الصور التي أعجبت بها</h3>
+                    ${likedListHtml}
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function openLikedLightbox(index, itemsArray) {
+            let currentIdx = index;
+            const lightbox = document.createElement('div');
+            lightbox.id = "liked-lightbox";
+            lightbox.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.96); z-index:4000; display:flex; justify-content:center; align-items:center; padding:15px;";
+            lightbox.onclick = function() { lightbox.remove(); };
+
+            function updateLikedLightContent() {
+                const item = itemsArray[currentIdx];
+                lightbox.innerHTML = `
+                    <span style="position:absolute; top:15px; right:15px; color:#fff; font-size:24px; cursor:pointer; background:rgba(255,255,255,0.1); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center;" onclick="document.getElementById('liked-lightbox').remove()">&times;</span>
+                    <img src="${item.src}" style="max-width:95%; max-height:80vh; border-radius:12px; object-fit:contain;" onclick="event.stopPropagation()">
+                `;
+            }
+            updateLikedLightContent();
+            document.body.appendChild(lightbox);
+        }
+
+        function openArchivePage() {
+            let archiveImgsHtml = '';
+            archiveItems.forEach(item => {
+                archiveImgsHtml += `<div style="background:var(--card-bg); border-radius:12px; overflow:hidden; border:1px solid var(--border-color);"><img src="${item.src}" style="width:100%; height:200px; object-fit:cover;"><div style="padding:12px; color:var(--primary-gold); font-weight:bold; font-size:0.95rem;">${item.name}</div></div>`;
+            });
+
+            const archiveWin = document.createElement('div');
+            archiveWin.id = "archive-page-container";
+            archiveWin.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg-dark); z-index:3500; overflow-y:auto; padding:25px 15px; display:flex; flex-direction:column; justify-content:space-between;";
+            archiveWin.innerHTML = `
+                <div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:0 auto 25px auto; border-bottom:1px solid var(--border-color); padding-bottom:15px; flex-wrap:gap:10px;">
+                        <h2 style="color:var(--primary-gold); font-size:1.5rem;"><i class="fas fa-images"></i> أرشيف أعمالنا</h2>
+                        <button onclick="document.getElementById('archive-page-container').remove()" style="background:var(--primary-gold); color:#121212; border:none; padding:8px 15px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:0.85rem;"><i class="fas fa-arrow-right"></i> العودة للرئيسية</button>
+                    </div>
+                    ${archiveItems.length === 0 ? `
+                        <div style="text-align:center; padding:60px 15px; max-width:700px; margin:0 auto;">
+                            <i class="fas fa-camera-retro" style="font-size:3rem; color:var(--primary-gold); margin-bottom:15px;"></i>
+                            <h3 style="color:var(--text-color); font-size:1.3rem; margin-bottom:10px;">لا يوجد صور تم نشرها</h3>
+                            <p style="color:#aaa; font-size:0.95rem; line-height:1.6;">انتظرونا قريبا ان شاء الله في احدث الاعمال لنا</p>
+                        </div>
+                    ` : `
+                        <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:15px;">
+                            ${archiveImgsHtml}
+                        </div>
+                    `}
+                </div>
+                <footer style="text-align:center; padding:15px; color:#888; border-top:1px solid var(--border-color); font-size:0.85rem;">&copy; 2026 HUSSAM ART</footer>
+            `;
+            document.body.appendChild(archiveWin);
+        }
+
+        function uploadNewImage() {
+            const fileInput = document.getElementById('upload-file-input');
+            const categorySelect = document.getElementById('upload-category-select');
+            const nameInput = document.getElementById('upload-name-input');
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const newObj = {
+                        id: Date.now(),
+                        src: e.target.result,
+                        category: categorySelect.value,
+                        name: nameInput.value.trim() || 'HUSSAM ART'
+                    };
+
+                    if (categorySelect.value === 'archive') {
+                        archiveItems.push(newObj);
+                        localStorage.setItem('archive_items', JSON.stringify(archiveItems));
+                        alert("تم نشر الصورة في الأرشيف بنجاح!");
+                    } else {
+                        galleryItems.push(newObj);
+                        localStorage.setItem('gallery_items', JSON.stringify(galleryItems));
+                        renderGallery(galleryItems);
+                        alert("تم تحميل ونشر الصورة بنجاح!");
+                    }
+                    fileInput.value = '';
+                    nameInput.value = '';
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                alert("يرجى اختيار صورة أولاً.");
+            }
+        }
+
+        function moveToTrash(id) {
+            const itemIndex = galleryItems.findIndex(i => i.id === id);
+            if (itemIndex > -1) {
+                const removed = galleryItems.splice(itemIndex, 1)[0];
+                trashItems.push(removed);
+                localStorage.setItem('gallery_items', JSON.stringify(galleryItems));
+                localStorage.setItem('trash_items', JSON.stringify(trashItems));
+                renderGallery(galleryItems);
+                alert("تم نقل الصورة إلى سلة المهملات.");
+            }
+        }
+
+        function openTrashModal() {
+            let trashHtml = '';
+            trashItems.forEach((item, idx) => {
+                trashHtml += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-bg); padding:8px 10px; border-radius:8px; margin-bottom:8px; font-size:0.85rem;">
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <img src="${item.src}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
+                            <span style="word-break:break-all;">${item.name}</span>
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <button onclick="restoreFromTrash(${idx})" style="background:#25d366; color:#fff; border:none; padding:4px 8px; border-radius:5px; cursor:pointer; font-size:0.75rem;">إرجاع</button>
+                        </div>
+                    </div>
+                `;
+            });
+            if (!trashHtml) trashHtml = '<p style="text-align:center; color:#888; font-size:0.9rem;">سلة المهملات فارغة.</p>';
+
+            const modal = document.createElement('div');
+            modal.id = "trash-modal";
+            modal.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:3000; display:flex; justify-content:center; align-items:center; padding:15px;";
+            modal.innerHTML = `
+                <div style="background:var(--bg-dark); width:100%; max-width:450px; padding:20px; border-radius:16px; border:2px solid var(--primary-gold); position:relative;">
+                    <button onclick="document.getElementById('trash-modal').remove()" style="position:absolute; top:12px; left:15px; background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer;">&times;</button>
+                    <h3 style="color:var(--primary-gold); margin-bottom:15px; text-align:center; font-size:1.1rem;"><i class="fas fa-trash-alt"></i> سلة المهملات</h3>
+                    ${trashHtml}
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        window.restoreFromTrash = function(idx) {
+            const restored = trashItems.splice(idx, 1)[0];
+            galleryItems.push(restored);
+            localStorage.setItem('gallery_items', JSON.stringify(galleryItems));
+            localStorage.setItem('trash_items', JSON.stringify(trashItems));
+            document.getElementById('trash-modal').remove();
+            renderGallery(galleryItems);
+            alert("تم إرجاع الصورة للمعرض بنجاح.");
+        };
+
+        function addComment(e, itemId) {
+            e.preventDefault();
+            const input = e.target.querySelector('.comment-input');
+            const text = input.value.trim();
+            if(!text) return;
+
+            const visitorName = getVisitorFakeId();
+            const timeStr = new Date().toLocaleTimeString('ar-SY', {hour: '2-digit', minute:'2-digit'});
+            let comments = JSON.parse(localStorage.getItem(`comments_${itemId}`) || '[]');
+            comments.push({ user: visitorName, text: text, time: timeStr });
+            localStorage.setItem(`comments_${itemId}`, JSON.stringify(comments));
+            input.value = '';
+            renderGallery(galleryItems);
+        }
+
+        function submitSiteReview(e) {
+            e.preventDefault();
+            alert("شكراً لك! تم إرسال تقييمك وتعليقك بنجاح.");
+            e.target.reset();
+        }
+
+        function openLightbox(index) {
+            currentImageIndex = index;
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = galleryItems[currentImageIndex].src;
+            lightbox.style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+
+        function closeLightboxOnBg(event) {
+            if (event.target.id === 'lightbox') closeLightbox();
+        }
+
+        function changeImage(direction) {
+            currentImageIndex += direction;
+            if (currentImageIndex < 0) currentImageIndex = galleryItems.length - 1;
+            if (currentImageIndex >= galleryItems.length) currentImageIndex = 0;
+            document.getElementById('lightbox-img').src = galleryItems[currentImageIndex].src;
+        }
+
+        function shareImage(src, name) {
+            if (navigator.share) {
+                navigator.share({ title: name, url: window.location.href }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert("تم نسخ رابط التصميم!");
+            }
+        }
+    </script>
+</body>
+</html>
+
+```
